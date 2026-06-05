@@ -73,4 +73,24 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+    @ExceptionHandler(GoalNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleGoalNotFound(GoalNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(LocalDateTime.now(), 
+                                                HttpStatus.NOT_FOUND.value(), 
+                                                "Not Found", 
+                                                ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(DuplicateGoalException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateGoal(DuplicateGoalException ex) {
+        ErrorResponse error = new ErrorResponse(LocalDateTime.now(), 
+                                                HttpStatus.CONFLICT.value(), 
+                                                "Conflict", 
+                                                ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
 }
