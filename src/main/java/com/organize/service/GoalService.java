@@ -12,9 +12,11 @@ import com.organize.dto.request.UpdateGoalRequest;
 import com.organize.dto.response.GoalResponse;
 import com.organize.entity.Goal;
 import com.organize.entity.GoalStatus;
+import com.organize.entity.TaskStatus;
 import com.organize.exception.DuplicateGoalException;
 import com.organize.exception.GoalNotFoundException;
 import com.organize.repository.GoalRepository;
+import com.organize.repository.TaskRepository;
 import com.organize.security.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class GoalService {
+
+    private final TaskRepository taskRepository;
     
     private final GoalRepository goalRepository;
 
@@ -146,11 +150,41 @@ public class GoalService {
                                         () -> new GoalNotFoundException("Goal not found")
                                     );
                     
-        //Phase 3
-        //Delete all tasks with associated with this goal
-        //before deleting the goal itsef
+        taskRepository.deleteByGoalIdAndUserId(goalId, userId);
         
         goalRepository.delete(goal);
     }
 
+
+
+
+    //helper for TaskService
+    public Goal getGoalEntityByIdAndUserId(String goalId, String userId) {
+        return goalRepository.findByIdAndUserId(goalId, userId)
+                                .orElseThrow(
+                                    () -> new GoalNotFoundException("Goal not found")
+                                );
+    }
+    public void recalculateGoalStatus(String goalId, String userId) {
+
+        Goal goal = getGoalEntityByIdAndUserId(goalId, userId);
+        long totalTasks = taskRepository.countByGoalIdAndUserId(goalId, userId);
+        long completedTasks = taskRepository.countByGoalIdAndUserIdAndStatus(goalId, userId, TaskStatus.COMPLETED);
+
+        if (completedTasks == 0) {
+            goal.setStatus(GoalStatus.NOT_STARTED);
+        }
+
+        else if (completedTasks == totalTasks) {
+            goal.setStatus(GoalStatus.COMPLETED);
+        }
+
+        else {
+            goal.setStatus(GoalStatus.IN_PROGRESS);
+        }
+
+        goal.setUpdatedAt(LocalDateTime.now());
+
+        goalRepository.save(goal);
+    }
 }
