@@ -31,6 +31,8 @@ public class TaskResponse {
 
     private TaskPriority priority;
 
+    private Integer estimatedDurationMinutes;
+
     private LocalDateTime scheduledStart;
 
     private LocalDateTime scheduledEnd;

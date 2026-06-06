@@ -24,4 +24,12 @@ public interface TaskRepository extends MongoRepository<Task, String> {
 
     //delete all tasks for aspecific goal
     void deleteByGoalIdAndUserId(String goalId, String userId);
+
+
+
+    //Schedule methods
+
+    List<Task> findByUserIdAndScheduledStartIsNotNull(String userId);
+
+    List<Task> findByUserIdAndScheduledStartIsNull(String userId);
 }

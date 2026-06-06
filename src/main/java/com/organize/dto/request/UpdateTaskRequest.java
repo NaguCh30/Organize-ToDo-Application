@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.organize.entity.TaskPriority;
 import com.organize.entity.TaskStatus;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +28,14 @@ public class UpdateTaskRequest {
 
     private TaskStatus status;
 
-    private LocalDateTime scheduledStart;
+    //Added estimated time for task for futire usage
+    @Min(1)
+    private Integer estimatedDurationMinutes;
 
-    private LocalDateTime scheduledEnd;
+    //Below two fields are removed from task update and task create requests
+    // and moved to the schedule service as scheduling is seperate operation
+
+    //private LocalDateTime scheduledStart;
+
+    //private LocalDateTime scheduledEnd;
 }

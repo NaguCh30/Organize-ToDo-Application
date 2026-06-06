@@ -15,8 +15,8 @@ import com.organize.entity.Task;
 import com.organize.entity.TaskPriority;
 import com.organize.entity.TaskStatus;
 import com.organize.exception.DuplicateTaskException;
-import com.organize.exception.InvalidTaskScheduleException;
 import com.organize.exception.TaskNotFoundException;
+import com.organize.repository.GoalRepository;
 import com.organize.repository.TaskRepository;
 import com.organize.security.CustomUserDetails;
 
@@ -55,6 +55,7 @@ public class TaskService {
             task.getDescription(),
             task.getStatus(),
             task.getPriority(),
+            task.getEstimatedDurationMinutes(),
             task.getScheduledStart(),
             task.getScheduledEnd(),
             task.getCreatedAt(),
@@ -88,15 +89,15 @@ public class TaskService {
             throw new DuplicateTaskException("Task title already exists in this goal");
         }
 
-        if (request.getScheduledStart() != null
-                && request.getScheduledEnd() != null
-                && request.getScheduledEnd()
-                        .isBefore(request.getScheduledStart())) {
+        // if (request.getScheduledStart() != null
+        //         && request.getScheduledEnd() != null
+        //         && request.getScheduledEnd()
+        //                 .isBefore(request.getScheduledStart())) {
 
-            throw new InvalidTaskScheduleException(
-                    "Scheduled end must be after scheduled start"
-            );
-        }
+        //     throw new InvalidTaskScheduleException(
+        //             "Scheduled end must be after scheduled start"
+        //     );
+        // }
 
         Task task = new Task();
 
@@ -114,9 +115,11 @@ public class TaskService {
                         : TaskPriority.MEDIUM
         );
 
-        task.setScheduledStart(request.getScheduledStart());
+        task.setEstimatedDurationMinutes(request.getEstimatedDurationMinutes());
 
-        task.setScheduledEnd(request.getScheduledEnd());
+        // task.setScheduledStart(request.getScheduledStart());
+
+        // task.setScheduledEnd(request.getScheduledEnd());
 
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
@@ -194,21 +197,25 @@ public class TaskService {
             task.setStatus(request.getStatus());
         }
 
-        if (request.getScheduledStart() != null) {
-            task.setScheduledStart(request.getScheduledStart());
+        if(request.getEstimatedDurationMinutes() != null) {
+            task.setEstimatedDurationMinutes(request.getEstimatedDurationMinutes());
         }
 
-        if (request.getScheduledEnd() != null) {
-            task.setScheduledEnd(request.getScheduledEnd());
-        }
+        // if (request.getScheduledStart() != null) {
+        //     task.setScheduledStart(request.getScheduledStart());
+        // }
 
-        if (task.getScheduledStart() != null
-                && task.getScheduledEnd() != null
-                && task.getScheduledEnd()
-                        .isBefore(task.getScheduledStart())) {
+        // if (request.getScheduledEnd() != null) {
+        //     task.setScheduledEnd(request.getScheduledEnd());
+        // }
 
-            throw new InvalidTaskScheduleException("Scheduled end must be after scheduled start");
-        }
+        // if (task.getScheduledStart() != null
+        //         && task.getScheduledEnd() != null
+        //         && task.getScheduledEnd()
+        //                 .isBefore(task.getScheduledStart())) {
+
+        //     throw new InvalidTaskScheduleException("Scheduled end must be after scheduled start");
+        // }
 
         task.setUpdatedAt(LocalDateTime.now());
 

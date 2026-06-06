@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,4 +31,6 @@ public class Task extends BaseEntity {
     private LocalDateTime scheduledStart;
 
     private LocalDateTime scheduledEnd;
+
+    private Integer estimatedDurationMinutes;
 }
