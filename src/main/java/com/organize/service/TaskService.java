@@ -30,6 +30,14 @@ public class TaskService {
     
     private final GoalService goalService;
 
+    public Task getTaskByTitle(String title) {
+
+        String userId = getCurrentUserId();
+
+        return taskRepository.findByUserIdAndTitleIgnoreCase(userId, title)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
+    }
+
     private String getCurrentUserId() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

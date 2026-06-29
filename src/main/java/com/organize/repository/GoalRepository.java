@@ -14,4 +14,6 @@ public interface GoalRepository extends MongoRepository<Goal, String> {
     Optional<Goal> findByIdAndUserId(String goalId, String userId);
 
     boolean existsByUserIdAndTitleIgnoreCase(String userId, String title);
+
+    Optional<Goal> findByUserIdAndTitleIgnoreCase(String userId, String title);
 }

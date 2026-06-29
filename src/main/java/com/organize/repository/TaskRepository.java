@@ -32,4 +32,7 @@ public interface TaskRepository extends MongoRepository<Task, String> {
     List<Task> findByUserIdAndScheduledStartIsNotNull(String userId);
 
     List<Task> findByUserIdAndScheduledStartIsNull(String userId);
+
+
+    Optional<Task> findByUserIdAndTitleIgnoreCase(String userId, String title);
 }

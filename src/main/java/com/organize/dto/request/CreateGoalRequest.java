@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateGoalRequest {
     
-    @NotBlank
+    //@NotBlank
     @Size(max = 100)
     private String title;
 

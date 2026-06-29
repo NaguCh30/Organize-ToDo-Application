@@ -30,6 +30,8 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
+		<!-- OpenAI Java client removed due to missing artifact on Maven Central. Add a valid OpenAI Java client
+		     dependency with correct coordinates if needed. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>

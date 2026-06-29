@@ -29,6 +29,14 @@ public class GoalService {
     
     private final GoalRepository goalRepository;
 
+    public Goal getGoalByTitle(String title) {
+
+        String userId = getCurrentUserId();
+
+        return goalRepository.findByUserIdAndTitleIgnoreCase(userId, title)
+                .orElseThrow(() -> new GoalNotFoundException("Goal not found"));
+    }
+
     private String getCurrentUserId() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -118,17 +126,19 @@ public class GoalService {
                                     .orElseThrow(
                                         () -> new GoalNotFoundException("Goal not found")
                                     );
-                    
-        String normalizedTitle = normalizeTitle(request.getTitle());
+        
+                                    
+        if (request.getTitle() != null) {
+            String normalizedTitle = normalizeTitle(request.getTitle());
 
-        if(!goal.getTitle().equalsIgnoreCase(normalizedTitle)
-                    && goalRepository.existsByUserIdAndTitleIgnoreCase(userId, normalizedTitle)) {
-                        
-                        throw new DuplicateGoalException("Goal title already exists");
+            if(!goal.getTitle().equalsIgnoreCase(normalizedTitle)
+                        && goalRepository.existsByUserIdAndTitleIgnoreCase(userId, normalizedTitle)) {
+                            
+                            throw new DuplicateGoalException("Goal title already exists");
+            }
+
+            goal.setTitle(normalizedTitle);
         }
-
-        goal.setTitle(normalizedTitle);
-
         String description = request.getDescription();
 
         if(description != null) description = description.strip();
